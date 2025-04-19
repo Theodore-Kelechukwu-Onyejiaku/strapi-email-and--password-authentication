@@ -21,6 +21,7 @@ export async function signupAction(
 
   const errors: Credentials = {};
 
+  // Validate the form data
   if (!username) errors.username = "Username is required";
   if (!username) errors.email = "Email is required";
   if (!password) errors.password = "Password is required";
@@ -29,7 +30,8 @@ export async function signupAction(
     errors.confirmPassword = "Passwords do not match";
   }
 
-  if (errors.confirmPassword || errors.password || errors.identifier) {
+  // Check if there are any errors
+  if (Object.keys(errors).length > 0) {
     return {
       errors,
       values: { username, email, password, confirmPassword } as Credentials,
@@ -45,6 +47,7 @@ export async function signupAction(
     password,
   } as Credentials);
 
+  // Check for errors in the response
   if (res.statusText !== "OK") {
     return {
       errors: {} as Credentials,
@@ -54,5 +57,6 @@ export async function signupAction(
     };
   }
 
+  // redirect to success page
   redirect("/auth/signup-success?email=" + email);
 }
