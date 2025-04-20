@@ -16,7 +16,7 @@ export default async function Home() {
 
       {/* Buttons */}
       <div className="mt-6 flex space-x-4">
-        <Link href="/auth/signin">
+        <Link href="/auth/login">
           <button className="px-6 py-3 text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition">
             Sign In
           </button>
