@@ -57,6 +57,6 @@ export async function signupAction(
     };
   }
 
-  // redirect to success page
-  redirect("/auth/signup-success?email=" + email);
+  // redirect to confirm email
+  redirect("/auth/confirm-email?email");
 }
