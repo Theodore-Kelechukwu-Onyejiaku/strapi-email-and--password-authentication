@@ -58,5 +58,5 @@ export async function signupAction(
   }
 
   // redirect to confirm email
-  redirect("/auth/confirm-email?email");
+  redirect("/auth/confirm-email");
 }
