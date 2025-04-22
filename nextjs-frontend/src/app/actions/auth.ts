@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { FormState, Credentials } from "../lib/definitions";
 import { signUpRequest } from "../lib/requests";
 
+import { confirmEmailRequest } from "../lib/requests";
+
 export interface SignUpResponse {
   signupError: string;
   signupSuccess: string;
@@ -58,5 +60,41 @@ export async function signupAction(
   }
 
   // redirect to confirm email
-  redirect("/auth/confirm-email");
+  redirect("/auth/confirm-email?email=" + email);
+}
+
+export async function resendConfirmEmailAction(
+  initialState: FormState,
+  formData: FormData
+) {
+  // Extract email from formData
+  const email = formData.get("email");
+
+  // Validate the email
+  if (!email) {
+    return {
+      values: { email } as Credentials,
+      message: "Email not found",
+      success: false,
+    };
+  }
+
+  // invoke the resend email function
+  const res = await confirmEmailRequest(email as string);
+
+  // Check for errors in the response
+  if (res.statusText !== "OK") {
+    return {
+      errors: {} as Credentials,
+      values: { email } as Credentials,
+      message: res?.statusText || res,
+      success: false,
+    };
+  }
+
+  return {
+    values: { email } as Credentials,
+    message: "Confirmation email sent",
+    success: true,
+  };
 }

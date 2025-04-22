@@ -19,3 +19,21 @@ export const signUpRequest = async (credentials: Credentials) => {
     return error?.response?.data?.error?.message || "Error signing up";
   }
 };
+
+export const confirmEmailRequest = async (email: string) => {
+  try {
+    const response = await axios.post(
+      `${STRAPI_ENDPOINT}/api/auth/send-email-confirmation`,
+      {
+        email,
+      }
+    );
+
+    return response;
+  } catch (error: any) {
+    return (
+      error?.response?.data?.error?.message ||
+      "Error sending confirmation email"
+    );
+  }
+};
