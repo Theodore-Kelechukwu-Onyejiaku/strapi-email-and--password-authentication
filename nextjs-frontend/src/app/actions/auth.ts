@@ -2,14 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { FormState, Credentials } from "../lib/definitions";
-import { signUpRequest } from "../lib/requests";
-
-import { confirmEmailRequest } from "../lib/requests";
-
-export interface SignUpResponse {
-  signupError: string;
-  signupSuccess: string;
-}
+import {
+  signUpRequest,
+  confirmEmailRequest,
+  signInRequest,
+} from "../lib/requests";
 
 export async function signupAction(
   initialState: FormState,
@@ -97,4 +94,44 @@ export async function resendConfirmEmailAction(
     message: "Confirmation email sent",
     success: true,
   };
+}
+
+export async function signinAction(
+  initialState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  // Convert formData into an object to extract data
+  const identifier = formData.get("identifier");
+  const password = formData.get("password");
+
+  const errors: Credentials = {};
+
+  if (!identifier) errors.identifier = "Username or email is required";
+  if (!password) errors.password = "Password is required";
+
+  if (errors.password || errors.identifier) {
+    return {
+      errors,
+      values: { identifier, password } as Credentials,
+      message: "Error submitting form",
+      success: false,
+    };
+  }
+
+  // Call backend API
+  const res: any = await signInRequest({
+    identifier,
+    password,
+  } as Credentials);
+
+  if (res.statusText !== "OK") {
+    return {
+      errors: {} as Credentials,
+      values: { identifier, password } as Credentials,
+      message: res?.statusText || res,
+      success: false,
+    };
+  }
+
+  redirect("/profile");
 }

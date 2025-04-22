@@ -64,7 +64,6 @@ export default function PleaseConfirmEmail() {
           >
             Resend Confirmation Email
           </button>
-          {/* <input type="hidden" name="email" value={userEmail as string} /> */}
         </form>
       </div>
     </div>

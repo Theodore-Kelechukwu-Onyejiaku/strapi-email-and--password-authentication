@@ -13,7 +13,7 @@ export default function EmailConfirmed() {
           account.
         </p>
 
-        <Link href="/auth/signin">
+        <Link href="/auth/login">
           <button className="mt-6 w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
             Go to Login
           </button>

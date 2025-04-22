@@ -37,3 +37,16 @@ export const confirmEmailRequest = async (email: string) => {
     );
   }
 };
+
+export const signInRequest = async (credentials: Credentials) => {
+  try {
+    const response = await axios.post(`${STRAPI_ENDPOINT}/api/auth/local`, {
+      identifier: credentials.identifier,
+      password: credentials.password,
+    });
+
+    return response;
+  } catch (error: any) {
+    return error?.response?.data?.error?.message || "Error signing in";
+  }
+};
