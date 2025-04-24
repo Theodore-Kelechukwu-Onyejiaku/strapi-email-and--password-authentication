@@ -7,6 +7,7 @@ import {
   confirmEmailRequest,
   signInRequest,
 } from "../lib/requests";
+import { createSession } from "../lib/session";
 
 export async function signupAction(
   initialState: FormState,
@@ -132,6 +133,9 @@ export async function signinAction(
       success: false,
     };
   }
+
+  // create session for user
+  await createSession(res.data);
 
   redirect("/profile");
 }
