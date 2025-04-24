@@ -7,7 +7,7 @@ import {
   confirmEmailRequest,
   signInRequest,
 } from "../lib/requests";
-import { createSession } from "../lib/session";
+import { createSession, deleteSession } from "../lib/session";
 
 export async function signupAction(
   initialState: FormState,
@@ -138,4 +138,10 @@ export async function signinAction(
   await createSession(res.data);
 
   redirect("/profile");
+}
+
+// Logout action
+export async function logoutAction() {
+  await deleteSession();
+  redirect("/");
 }
