@@ -50,3 +50,38 @@ export const signInRequest = async (credentials: Credentials) => {
     return error?.response?.data?.error?.message || "Error signing in";
   }
 };
+
+export const forgotPasswordRequest = async (email: string) => {
+  try {
+    const response = await axios.post(
+      `${STRAPI_ENDPOINT}/api/auth/forgot-password`,
+      {
+        email, // user's email
+      }
+    );
+
+    return response;
+  } catch (error: any) {
+    return (
+      error?.response?.data?.error?.message ||
+      "Error sending reset password email"
+    );
+  }
+};
+
+export const resetPasswordRequest = async (credentials: Credentials) => {
+  try {
+    const response = await axios.post(
+      `${STRAPI_ENDPOINT}/api/auth/reset-password`,
+      {
+        code: credentials?.code,
+        password: credentials?.password,
+        passwordConfirmation: credentials?.confirmPassword,
+      }
+    );
+
+    return response;
+  } catch (error: any) {
+    return error?.response?.data?.error?.message || "Error resetting password";
+  }
+};

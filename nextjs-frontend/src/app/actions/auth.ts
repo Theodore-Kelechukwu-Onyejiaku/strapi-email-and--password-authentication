@@ -6,6 +6,8 @@ import {
   signUpRequest,
   confirmEmailRequest,
   signInRequest,
+  forgotPasswordRequest,
+  resetPasswordRequest,
 } from "../lib/requests";
 import { createSession, deleteSession } from "../lib/session";
 
@@ -139,9 +141,100 @@ export async function signinAction(
 
   redirect("/profile");
 }
-
 // Logout action
 export async function logoutAction() {
   await deleteSession();
   redirect("/");
+}
+
+export async function forgotPasswordAction(
+  initialState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  // Get email from form data
+  const email = formData.get("email");
+
+  const errors: Credentials = {};
+
+  // Validate the form data
+  if (!email) errors.email = "Email is required";
+  if (errors.email) {
+    return {
+      errors,
+      values: { email } as Credentials,
+      message: "Error submitting form",
+      success: false,
+    };
+  }
+
+  // Reqest password reset link
+  const res: any = await forgotPasswordRequest(email as string);
+
+  if (res.statusText !== "OK") {
+    return {
+      errors: {} as Credentials,
+      values: { email } as Credentials,
+      message: res?.statusText || res,
+      success: false,
+    };
+  }
+
+  return {
+    errors: {} as Credentials,
+    values: { email } as Credentials,
+    message: "Password reset email sent",
+    success: true,
+  };
+}
+
+export async function resetPasswordAction(
+  initialState: FormState,
+  formData: FormData
+): Promise<FormState> {
+
+  
+  const password = formData.get("password"); // password
+  const code = formData.get("code"); // code
+  const confirmPassword = formData.get("confirmPassword"); // confirm password
+
+  const errors: Credentials = {};
+
+  if (!password) errors.password = "Password is required";
+  if (!confirmPassword) errors.confirmPassword = "Confirm password is required";
+  if (!code) errors.code = "Error resetting password";
+  if (password && confirmPassword && password !== confirmPassword) {
+    errors.confirmPassword = "Passwords do not match";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return {
+      errors,
+      values: { password, confirmPassword, code } as Credentials,
+      message: "Error submitting form",
+      success: false,
+    };
+  }
+
+  // Call backend API
+  const res: any = await resetPasswordRequest({
+    code,
+    password,
+    confirmPassword,
+  } as Credentials);
+
+  if (res?.statusText !== "OK") {
+    return {
+      errors: {} as Credentials,
+      values: { password, confirmPassword, code } as Credentials,
+      message: res?.statusText || res,
+      success: false,
+    };
+  }
+
+  return {
+    errors: {} as Credentials,
+    values: {} as Credentials,
+    message: "Reset password successful!",
+    success: true,
+  };
 }
