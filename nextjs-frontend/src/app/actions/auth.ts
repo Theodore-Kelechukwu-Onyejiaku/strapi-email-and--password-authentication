@@ -8,6 +8,7 @@ import {
   signInRequest,
   forgotPasswordRequest,
   resetPasswordRequest,
+  changePasswordRequest,
 } from "../lib/requests";
 import { createSession, deleteSession } from "../lib/session";
 
@@ -191,8 +192,6 @@ export async function resetPasswordAction(
   initialState: FormState,
   formData: FormData
 ): Promise<FormState> {
-
-  
   const password = formData.get("password"); // password
   const code = formData.get("code"); // code
   const confirmPassword = formData.get("confirmPassword"); // confirm password
@@ -226,6 +225,57 @@ export async function resetPasswordAction(
     return {
       errors: {} as Credentials,
       values: { password, confirmPassword, code } as Credentials,
+      message: res?.statusText || res,
+      success: false,
+    };
+  }
+
+  return {
+    errors: {} as Credentials,
+    values: {} as Credentials,
+    message: "Reset password successful!",
+    success: true,
+  };
+}
+
+export async function changePasswordAction(
+  initialState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  // Convert formData into an object to extract data
+  const password = formData.get("password");
+  const newPassword = formData.get("newPassword");
+  const confirmPassword = formData.get("confirmPassword");
+
+  const errors: Credentials = {};
+
+  if (!password) errors.password = "Current Password is required";
+  if (!confirmPassword) errors.confirmPassword = "Confirm password is required";
+  if (!newPassword) errors.newPassword = "New password is required";
+  if (confirmPassword !== newPassword) {
+    errors.confirmPassword = "Passwords do not match";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return {
+      errors,
+      values: { password, confirmPassword, newPassword } as Credentials,
+      message: "Error submitting form",
+      success: false,
+    };
+  }
+
+  // Call backend API
+  const res: any = await changePasswordRequest({
+    password,
+    newPassword,
+    confirmPassword,
+  } as Credentials);
+
+  if (res?.statusText !== "OK") {
+    return {
+      errors: {} as Credentials,
+      values: { password, confirmPassword, newPassword } as Credentials,
       message: res?.statusText || res,
       success: false,
     };

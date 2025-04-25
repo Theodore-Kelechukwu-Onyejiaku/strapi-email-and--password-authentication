@@ -1,3 +1,4 @@
+import { verifySession } from "./dal";
 import { Credentials } from "./definitions";
 import axios from "axios";
 
@@ -77,6 +78,36 @@ export const resetPasswordRequest = async (credentials: Credentials) => {
         code: credentials?.code,
         password: credentials?.password,
         passwordConfirmation: credentials?.confirmPassword,
+      }
+    );
+
+    return response;
+  } catch (error: any) {
+    return error?.response?.data?.error?.message || "Error resetting password";
+  }
+};
+
+// Path: nextjs-frontend/src/app/lib/requests.ts
+
+// ... other codes
+
+export const changePasswordRequest = async (credentials: Credentials) => {
+  try {
+    const {
+      session: { jwt },
+    }: any = await verifySession();
+
+    const response = await axios.post(
+      `${STRAPI_ENDPOINT}/api/auth/change-password`,
+      {
+        currentPassword: credentials.password,
+        password: credentials.newPassword,
+        passwordConfirmation: credentials.confirmPassword,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
       }
     );
 

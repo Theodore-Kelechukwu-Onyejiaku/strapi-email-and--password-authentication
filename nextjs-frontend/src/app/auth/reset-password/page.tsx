@@ -78,7 +78,7 @@ export default function ResetPassword() {
             disabled={IsPending}
             className="cursor-pointer w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
           >
-            Reset Password
+            {IsPending ? "Submitting..." : "Reset Password"}
           </button>
           <input type="hidden" name="code" value={code as string} />
           <input type="hidden" name="passwordType" value="reset" />{" "}
