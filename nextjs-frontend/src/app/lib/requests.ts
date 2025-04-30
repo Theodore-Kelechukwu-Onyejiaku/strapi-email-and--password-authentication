@@ -87,10 +87,6 @@ export const resetPasswordRequest = async (credentials: Credentials) => {
   }
 };
 
-// Path: nextjs-frontend/src/app/lib/requests.ts
-
-// ... other codes
-
 export const changePasswordRequest = async (credentials: Credentials) => {
   try {
     const {
