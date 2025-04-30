@@ -18,7 +18,7 @@ export default async function Navbar() {
           <LogOutButton />
         ) : (
           <Link
-            href="/auth/signin"
+            href="/auth/login"
             className="px-4 py-2 rounded-lg bg-blue-500 text-white font-medium shadow-md transition-transform transform hover:scale-105 hover:bg-blue-600 cursor-pointer"
           >
             Sign-in
